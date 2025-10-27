@@ -5,11 +5,11 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-# Step 1 — Checkout repository
+# Step 1: Checkout
 - checkout: self
   displayName: 'Checkout repository'
 
-# Step 2 — Build Docker Image
+# Step 2: Build Docker Image (with full tag)
 - task: Docker@2
   displayName: 'Build Docker Image'
   inputs:
@@ -17,9 +17,9 @@ steps:
     dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: |
-      latest
+      adhitya14/memoriai-cognitive:latest
 
-# Step 3 — Push Docker Image to Docker Hub
+# Step 3: Push Docker Image to Docker Hub
 - task: Docker@2
   displayName: 'Push Docker Image to Docker Hub'
   inputs:
