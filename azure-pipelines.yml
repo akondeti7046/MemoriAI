@@ -5,21 +5,38 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-# Step 1: Build Docker image
+# Step 1: Checkout code
+- checkout: self
+  displayName: 'Checkout repository'
+
+# Step 2: List files (helps confirm Dockerfile path)
+- script: |
+    echo "Current directory: $(Build.SourcesDirectory)"
+    ls -la
+  displayName: 'List files in workspace'
+
+# Step 3: Build Docker image
 - task: Docker@2
-  displayName: Build Docker Image
+  displayName: 'Build Docker Image'
   inputs:
     command: build
-    Dockerfile: '**/Dockerfile'
+    dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+    buildContext: '$(Build.SourcesDirectory)'
     tags: |
-      latest
+      adhitya14/memoriai-cognitive:latest
 
-# Step 2: Push image to Docker Hub
+# Step 4: Verify Docker before pushing
+- script: |
+    docker --version
+    docker images
+  displayName: 'Verify Docker environment'
+
+# Step 5: Push image to Docker Hub
 - task: Docker@2
-  displayName: Push Docker Image to Docker Hub
+  displayName: 'Push Docker Image to Docker Hub'
   inputs:
     containerRegistry: 'DockerHubConnection'
-    repository: 'adhitya7046/memoriai-cognitive'
+    repository: 'adhitya14/memoriai-cognitive'
     command: push
     tags: |
       latest
