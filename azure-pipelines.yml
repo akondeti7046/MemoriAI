@@ -17,12 +17,14 @@ steps:
     find $(Build.SourcesDirectory) -maxdepth 3
   displayName: 'Debug: Show folder structure'
 
-# Step 3 — Build Docker Image
+# Step 3 — Push Docker Image to Docker Hub
 - task: Docker@2
-  displayName: 'Build Docker Image (adhitya14/memoriai-cognitive)'
+  displayName: 'Push Docker Image to Docker Hub'
   inputs:
-    command: build
-    dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-    buildContext: '$(Build.SourcesDirectory)'
+    containerRegistry: 'DockerHubConnection'
+    repository: 'adhitya14/memoriai-cognitive'
+    command: push
     tags: |
       adhitya14/memoriai-cognitive:latest
+      latest
+
