@@ -9,13 +9,15 @@ steps:
 - checkout: self
   displayName: 'Checkout repository'
 
-# Step 2 — Debug: Print directory and show Dockerfile
-- script: |
-    echo "Current working directory:"
-    pwd
-    echo "Listing files recursively (max 3 levels):"
-    find $(Build.SourcesDirectory) -maxdepth 3
-  displayName: 'Debug: Show folder structure'
+# Step 2 — Build Docker Image
+- task: Docker@2
+  displayName: 'Build Docker Image'
+  inputs:
+    command: build
+    dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+    buildContext: '$(Build.SourcesDirectory)'
+    tags: |
+      latest
 
 # Step 3 — Push Docker Image to Docker Hub
 - task: Docker@2
@@ -25,6 +27,4 @@ steps:
     repository: 'adhitya14/memoriai-cognitive'
     command: push
     tags: |
-      adhitya14/memoriai-cognitive:latest
       latest
-
