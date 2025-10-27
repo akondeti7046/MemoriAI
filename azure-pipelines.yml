@@ -5,18 +5,17 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-# Step 1: Checkout code
+# Step 1 — Checkout repo
 - checkout: self
   displayName: 'Checkout repository'
 
-# Step 2: List files for confirmation
+# Step 2 — Verify files
 - script: |
-    echo "Verifying current directory:"
-    pwd
-    ls -la
-  displayName: 'Verify Dockerfile presence'
+    echo "Verifying Dockerfile path..."
+    ls -la $(Build.SourcesDirectory)
+  displayName: 'Verify workspace contents'
 
-# Step 3: Build the Docker image with the correct tag
+# Step 3 — Build Docker image
 - task: Docker@2
   displayName: 'Build Docker Image (adhitya14/memoriai-cognitive)'
   inputs:
@@ -26,13 +25,13 @@ steps:
     tags: |
       adhitya14/memoriai-cognitive:latest
 
-# Step 4: Verify image exists before push
+# Step 4 — Check image list
 - script: |
-    echo "Listing Docker images..."
+    echo "Images after build:"
     docker images
-  displayName: 'Check local Docker images'
+  displayName: 'List Docker Images'
 
-# Step 5: Push image to Docker Hub
+# Step 5 — Push to Docker Hub
 - task: Docker@2
   displayName: 'Push Docker Image to Docker Hub'
   inputs:
